@@ -1,81 +1,71 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mobile Camera Access</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            text-align: center;
-            margin-top: 50px;
-        }
-        #password-form {
-            margin-bottom: 20px;
-        }
-        #camera-container {
-            display: none;
-            margin-top: 20px;
-        }
-        video {
-            width: 100%;
-            max-width: 400px;
-            border: 1px solid #ccc;
-            border-radius: 10px;
-        }
-        .hidden {
-            display: none;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <title>For You ❤️</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <style>
+    body {
+      background: linear-gradient(135deg, #ff9a9e, #fad0c4);
+      min-height: 100vh;
+    }
+    .card {
+      border-radius: 20px;
+    }
+    video {
+      width: 100%;
+      border-radius: 15px;
+    }
+  </style>
 </head>
-<body>
+<body class="d-flex align-items-center justify-content-center">
 
-    <h1>Access Mobile Camera</h1>
+  <div class="card shadow p-4 text-center" style="max-width: 400px; width: 100%;">
+    <h3 class="mb-3">💖 Hello Beautiful</h3>
+    <p class="text-muted">Enter the secret code</p>
 
-    <div id="password-form">
-        <label for="password">Enter Password: </label>
-        <input type="password" id="password" placeholder="Enter password" />
-        <button onclick="checkPassword()">Submit</button>
+    <input type="password" id="password" class="form-control mb-3" placeholder="Password">
+
+    <button class="btn btn-danger w-100" onclick="openCamera()">
+      Unlock 💌
+    </button>
+
+    <div id="cameraBox" class="mt-4 d-none">
+      <h5 class="mb-2">Smile 😊</h5>
+      <video id="video" autoplay playsinline muted></video>
     </div>
+  </div>
 
-    <div id="camera-container" class="hidden">
-        <h2>Camera Access Granted</h2>
-        <video id="video" autoplay></video>
-    </div>
+<script>
+  const SECRET = "8116"; // change password here
 
-    <script>
-        const correctPassword = '1234'; // Replace with your desired password
-        const cameraContainer = document.getElementById('camera-container');
-        const passwordForm = document.getElementById('password-form');
-        const videoElement = document.getElementById('video');
+  function openCamera() {
+    const pw = document.getElementById("password").value;
 
-        // Function to check the password
-        function checkPassword() {
-            const passwordInput = document.getElementById('password').value;
+    if (pw !== SECRET) {
+      alert("Wrong password 💔");
+      return;
+    }
 
-            if (passwordInput === correctPassword) {
-                // Hide the password form and show the camera
-                passwordForm.classList.add('hidden');
-                cameraContainer.classList.remove('hidden');
-
-                // Try to access the front camera
-                startCamera();
-            } else {
-                alert('Incorrect password, try again!');
-            }
-        }
-
-        // Function to start the camera
-        function startCamera() {
-            navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user' } })
-                .then((stream) => {
-                    videoElement.srcObject = stream;
-                })
-                .catch((error) => {
-                    alert('Unable to access camera: ' + error.message);
-                });
-        }
-    </script>
+    navigator.mediaDevices.getUserMedia({
+      video: { facingMode: "user" },
+      audio: false
+    })
+    .then(stream => {
+      document.getElementById("cameraBox").classList.remove("d-none");
+      const video = document.getElementById("video");
+      video.srcObject = stream;
+      video.play();
+    })
+    .catch(err => {
+      alert("Camera permission needed 📷");
+    });
+  }
+</script>
 
 </body>
 </html>
